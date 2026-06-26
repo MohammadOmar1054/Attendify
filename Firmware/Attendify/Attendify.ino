@@ -1,120 +1,253 @@
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 #include <Adafruit_Fingerprint.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+#define OLED_SDA 21
+#define OLED_SCL 22
+
+#define BUZZER_PIN 4
 
 HardwareSerial FingerSerial(2);
 Adafruit_Fingerprint finger(&FingerSerial);
 
-uint16_t getNextID()
+Adafruit_SSD1306 display(
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  &Wire,
+  -1
+);
+
+struct Student {
+  uint16_t fingerID;
+  const char* name;
+  const char* studentID;
+};
+
+Student students[] = {
+  {1, "Mohammad Omar", "R25EI028"}
+};
+
+const int STUDENT_COUNT =
+  sizeof(students) / sizeof(students[0]);
+
+bool attendanceMode = false;
+
+void showMessage(
+  String line1,
+  String line2 = "")
 {
-  finger.getTemplateCount();
-  return finger.templateCount + 1;
+  display.clearDisplay();
+
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+
+  display.setCursor(0, 10);
+  display.println(line1);
+
+  display.setCursor(0, 30);
+  display.println(line2);
+
+  display.display();
 }
 
-bool enrollFingerprint(uint16_t id)
+void successBeep()
 {
-  int p = -1;
+  digitalWrite(BUZZER_PIN, HIGH);
+  delay(200);
+  digitalWrite(BUZZER_PIN, LOW);
+}
 
-  Serial.println("\nPlace finger...");
+void errorBeep()
+{
+  digitalWrite(BUZZER_PIN, HIGH);
+  delay(100);
+  digitalWrite(BUZZER_PIN, LOW);
 
-  while (p != FINGERPRINT_OK)
+  delay(100);
+
+  digitalWrite(BUZZER_PIN, HIGH);
+  delay(100);
+  digitalWrite(BUZZER_PIN, LOW);
+}
+
+Student* findStudent(uint16_t id)
+{
+  for (int i = 0; i < STUDENT_COUNT; i++)
   {
-    p = finger.getImage();
+    if (students[i].fingerID == id)
+    {
+      return &students[i];
+    }
   }
 
-  Serial.println("Image captured");
+  return NULL;
+}
 
-  p = finger.image2Tz(1);
+void countFingerprints()
+{
+  finger.getTemplateCount();
+
+  Serial.print("Stored fingerprints: ");
+  Serial.println(finger.templateCount);
+}
+
+void recognizeFinger()
+{
+  int p = finger.getImage();
+
+  if (p != FINGERPRINT_OK)
+    return;
+
+  p = finger.image2Tz();
+
+  if (p != FINGERPRINT_OK)
+    return;
+
+  p = finger.fingerFastSearch();
 
   if (p != FINGERPRINT_OK)
   {
-    Serial.println("Failed to process image");
-    return false;
+    Serial.println("Unknown Finger");
+
+    showMessage(
+      "Access Denied",
+      "Unknown Finger");
+
+    errorBeep();
+
+    delay(2000);
+
+    showMessage(
+      "Attendance",
+      "Place Finger");
+
+    return;
   }
 
-  Serial.println("Remove finger");
+  uint16_t id = finger.fingerID;
 
-  delay(2000);
+  Student* student =
+    findStudent(id);
 
-  while (finger.getImage() != FINGERPRINT_NOFINGER);
-
-  Serial.println("Place SAME finger again");
-
-  p = -1;
-
-  while (p != FINGERPRINT_OK)
+  if (student != NULL)
   {
-    p = finger.getImage();
-  }
+    Serial.println();
+    Serial.println("Attendance Marked");
 
-  Serial.println("Second image captured");
-
-  p = finger.image2Tz(2);
-
-  if (p != FINGERPRINT_OK)
-  {
-    Serial.println("Failed second image");
-    return false;
-  }
-
-  p = finger.createModel();
-
-  if (p != FINGERPRINT_OK)
-  {
-    Serial.println("Fingerprints do not match");
-    return false;
-  }
-
-  p = finger.storeModel(id);
-
-  if (p == FINGERPRINT_OK)
-  {
-    Serial.print("Enrollment successful! ID = ");
+    Serial.print("ID: ");
     Serial.println(id);
 
-    return true;
+    Serial.print("Name: ");
+    Serial.println(student->name);
+
+    Serial.print("Student ID: ");
+    Serial.println(student->studentID);
+
+    showMessage(
+      "Welcome",
+      student->name);
+
+    successBeep();
+
+    delay(2000);
+
+    showMessage(
+      "Attendance",
+      "Place Finger");
   }
+  else
+  {
+    Serial.println(
+      "Fingerprint found but no student record");
 
-  Serial.println("Failed to store fingerprint");
+    showMessage(
+      "ID Found",
+      String(id));
 
-  return false;
+    errorBeep();
+  }
 }
 
 void setup()
 {
   Serial.begin(115200);
 
+  pinMode(BUZZER_PIN, OUTPUT);
+  digitalWrite(BUZZER_PIN, LOW);
+
+  Wire.begin(OLED_SDA, OLED_SCL);
+
+  if (!display.begin(
+        SSD1306_SWITCHCAPVCC,
+        0x3C))
+  {
+    while (1);
+  }
+
+  showMessage(
+    "Attendify",
+    "Starting...");
+
   FingerSerial.begin(
-      57600,
-      SERIAL_8N1,
-      16,
-      17);
+    57600,
+    SERIAL_8N1,
+    16,
+    17);
 
   finger.begin(57600);
 
   if (!finger.verifyPassword())
   {
-    Serial.println("Fingerprint sensor not found!");
+    showMessage(
+      "Fingerprint",
+      "NOT FOUND");
+
     while (1);
   }
 
-  Serial.println("Attendify v0.1A");
-  Serial.println("Type E to enroll");
+  showMessage(
+    "Attendify",
+    "Ready");
+
+  Serial.println();
+  Serial.println("Attendify v0.1B");
+  Serial.println("A = Attendance Mode");
+  Serial.println("C = Count Fingerprints");
 }
 
 void loop()
 {
   if (Serial.available())
   {
-    String cmd = Serial.readStringUntil('\n');
+    String cmd =
+      Serial.readStringUntil('\n');
+
     cmd.trim();
 
-    if (cmd == "E")
+    if (cmd == "A")
     {
-      uint16_t id = getNextID();
+      attendanceMode = true;
 
-      Serial.print("Assigning Finger ID: ");
-      Serial.println(id);
+      Serial.println(
+        "Attendance Mode Enabled");
 
-      enrollFingerprint(id);
+      showMessage(
+        "Attendance",
+        "Place Finger");
     }
+
+    if (cmd == "C")
+    {
+      countFingerprints();
+    }
+  }
+
+  if (attendanceMode)
+  {
+    recognizeFinger();
   }
 }
