@@ -1,0 +1,71 @@
+.attendance-console {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.fingerprint-panel {
+  display: grid;
+  place-items: center;
+  min-height: 420px;
+  padding: 28px;
+  text-align: center;
+}
+
+.fingerprint-panel h2 {
+  margin: 24px 0 8px;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+}
+
+.fingerprint-panel p {
+  max-width: 460px;
+  margin: 0;
+  color: var(--muted);
+}
+
+.fingerprint-pulse {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 164px;
+  height: 164px;
+  color: var(--primary);
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 50%;
+  font-size: 5rem;
+}
+
+.fingerprint-pulse::before,
+.fingerprint-pulse::after {
+  content: "";
+  position: absolute;
+  inset: -16px;
+  border: 2px solid rgba(56, 189, 248, 0.42);
+  border-radius: 50%;
+  animation: pulse 1.8s ease-out infinite;
+}
+
+.fingerprint-pulse::after {
+  animation-delay: 0.6s;
+}
+
+.status-panel {
+  padding: 22px;
+}
+
+.live-clock {
+  font-weight: 700;
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.9;
+    transform: scale(0.82);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.18);
+  }
+}
