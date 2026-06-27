@@ -9,7 +9,16 @@ bool initFingerprint()
 
     finger.begin(57600);
 
-    return finger.verifyPassword();
+   if (finger.verifyPassword())
+{
+    Serial.println("Fingerprint sensor found!");
+    return true;
+}
+else
+{
+    Serial.println("Fingerprint sensor NOT found!");
+    return false;
+}
 }
 
 uint16_t getFingerprintCount()
