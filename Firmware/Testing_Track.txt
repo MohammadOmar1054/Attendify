@@ -1,3 +1,4 @@
+- As of Attendify V2.0-stable
 ✓ ESP32 stable
 ✓ R307 stable
 ✓ OLED stable
