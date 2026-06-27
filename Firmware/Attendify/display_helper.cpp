@@ -7,27 +7,29 @@
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
-Adafruit_SSD1306 display(
-    SCREEN_WIDTH,
-    SCREEN_HEIGHT,
-    &Wire,
-    -1);
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
 void initDisplay()
 {
     Wire.begin(21, 22);
 
-    display.begin(
-        SSD1306_SWITCHCAPVCC,
-        0x3C);
+    if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C))
+    {
+        Serial.println("OLED INIT FAILED");
+        while (true);
+    }
 
     display.clearDisplay();
+    display.setTextSize(2);
+    display.setTextColor(SSD1306_WHITE);
+    display.setCursor(0, 0);
+    display.println("OLED OK");
     display.display();
+
+    Serial.println("OLED INIT SUCCESS");
 }
 
-void showMessage(
-    const String& line1,
-    const String& line2)
+void showMessage(const String& line1, const String& line2)
 {
     display.clearDisplay();
 

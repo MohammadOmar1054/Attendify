@@ -46,20 +46,21 @@ void handleAttendance()
 
     Serial.println("Waiting for fingerprint...");
 
-    int id = searchFingerprint();
-
-    if (id > 0)
+    while (finger.getImage() != FINGERPRINT_OK)
     {
-        Serial.print("Recognized ID: ");
-        Serial.println(id);
-
-        showMessage("Recognized", "ID: " + String(id));
-
-        successBeep();
-
-        delay(2000);
+        delay(50);
     }
-    else
+
+    if (finger.image2Tz() != FINGERPRINT_OK)
+    {
+        showMessage("Scan", "Failed");
+        errorBeep();
+        delay(2000);
+        showReady();
+        return;
+    }
+
+    if (finger.fingerFastSearch() != FINGERPRINT_OK)
     {
         Serial.println("Unknown Finger");
 
@@ -68,33 +69,76 @@ void handleAttendance()
         errorBeep();
 
         delay(2000);
+
+        showReady();
+        return;
     }
+
+    int id = finger.fingerID;
+
+    Serial.print("Recognized ID: ");
+    Serial.println(id);
+
+    showMessage("Welcome",
+                "ID: " + String(id));
+
+    successBeep();
+
+    delay(2000);
 
     showReady();
 }
-
 void handleEnrollment()
 {
     showMessage("Enrollment", "Place Finger");
 
     Serial.println("Checking for duplicate fingerprint...");
 
-    int existingID = searchFingerprint();
+    Serial.println("Place finger to check duplicate...");
 
-    if (existingID > 0)
-    {
-        Serial.print("Fingerprint already exists. ID = ");
-        Serial.println(existingID);
+while (finger.getImage() != FINGERPRINT_OK)
+{
+    delay(50);
+}
 
-        showMessage("Already Exists", "ID: " + String(existingID));
+if (finger.image2Tz() != FINGERPRINT_OK)
+{
+    Serial.println("Image conversion failed");
+    return;
+}
 
-        errorBeep();
+if (finger.fingerFastSearch() == FINGERPRINT_OK)
+{
+    int existingID = finger.fingerID;
 
-        delay(2500);
+    Serial.print("Fingerprint already exists. ID = ");
+    Serial.println(existingID);
 
-        showReady();
-        return;
-    }
+    showMessage("Already Exists",
+                "ID: " + String(existingID));
+
+    errorBeep();
+
+    delay(2500);
+
+    showReady();
+    return;
+}
+
+    // if (existingID > 0)
+    // {
+    //     Serial.print("Fingerprint already exists. ID = ");
+    //     Serial.println(existingID);
+
+    //     showMessage("Already Exists", "ID: " + String(existingID));
+
+    //     errorBeep();
+
+    //     delay(2500);
+
+    //     showReady();
+    //     return;
+    // }
 
     int freeID = findFirstFreeID();
 
@@ -124,7 +168,7 @@ void handleEnrollment()
         Serial.print("Enrollment Success. ID = ");
         Serial.println(enrolledID);
 
-        showMessage("Enroll Success", "ID: " + String(enrolledID));
+        showMessage("Student Added", "ID: " + String(enrolledID));
 
         successBeep();
     }
