@@ -17,6 +17,8 @@ bool clearFingerprintDatabase();
 
 int searchFingerprint();
 
-int enrollFingerprint();
+int findFirstFreeID();
 
-#endif
+int enrollFingerprint(int targetID);
+
+#endif 

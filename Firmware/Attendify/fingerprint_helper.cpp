@@ -48,10 +48,21 @@ int searchFingerprint()
     return finger.fingerID;
 }
 
-int enrollFingerprint()
+int findFirstFreeID()
 {
-    int nextID = getFingerprintCount() + 1;
+    for (int id = 1; id <= 1000; id++)
+    {
+        if (finger.loadModel(id) != FINGERPRINT_OK)
+        {
+            return id;
+        }
+    }
 
+    return -1;
+}
+
+int enrollFingerprint(int targetID)
+{
     Serial.println("Place finger...");
 
     while (finger.getImage() != FINGERPRINT_OK);
@@ -75,8 +86,8 @@ int enrollFingerprint()
     if (finger.createModel() != FINGERPRINT_OK)
         return -1;
 
-    if (finger.storeModel(nextID) != FINGERPRINT_OK)
+    if (finger.storeModel(targetID) != FINGERPRINT_OK)
         return -1;
 
-    return nextID;
+    return targetID;
 }
