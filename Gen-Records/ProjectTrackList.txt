@@ -1,8 +1,16 @@
-Firmware              ✅
+Firmware              ✅ 80-90% (Requires Integration to firebase)
 Frontend UI           ✅
 Firebase Project      ✅
 Authentication        ✅
 Firestore Collections ✅
 
 Frontend ↔ Firebase   ❌
+         └── Progress
+                ├── Authentication ✅
+                        ├──Error handling ✅
+                        ├─ Taost Notif  ✅
+                ├─ Classes
+                ├─ Students
+                ├─ Attendance 
+                ├─ Live Fingerprint Events 
 ESP32 ↔ Firebase      ❌
