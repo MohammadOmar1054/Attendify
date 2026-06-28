@@ -1,15 +1,25 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+
 const delay = (value, timeout = 120) => new Promise((resolve) => {
   window.setTimeout(() => resolve(structuredClone(value)), timeout);
 });
 
 export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDaN1frYqENBaSFMJN9Fy6o4CFqOhS8BIo",
+  authDomain: "attendify-922e2.firebaseapp.com",
+  projectId: "attendify-922e2",
+  storageBucket: "attendify-922e2.firebasestorage.app",
+  messagingSenderId: "189746001524",
+  appId: "1:189746001524:web:ec436d7843cf4e5f68c321"
 };
+const app = initializeApp(firebaseConfig);
+
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
 
 export const mockUser = {
   name: "Dr. Aisha Kumar",
@@ -56,16 +66,24 @@ export const mockHistory = [
 ];
 
 export async function loginUser(email, password) {
-  if (!email || !password) {
-    throw new Error("Email and password are required.");
-  }
+  const credential = await signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+
   localStorage.setItem("attendify.authenticated", "true");
-  return delay({ ...mockUser, email });
+
+  return {
+    uid: credential.user.uid,
+    email: credential.user.email
+  };
 }
 
 export async function logoutUser() {
+  await signOut(auth);
   localStorage.removeItem("attendify.authenticated");
-  return delay({ success: true });
+  return { success: true };
 }
 
 export async function loadClasses() {
