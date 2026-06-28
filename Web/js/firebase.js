@@ -66,18 +66,37 @@ export const mockHistory = [
 ];
 
 export async function loginUser(email, password) {
-  const credential = await signInWithEmailAndPassword(
-    auth,
-    email,
-    password
-  );
+  try {
+    const credential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
-  localStorage.setItem("attendify.authenticated", "true");
+    localStorage.setItem("attendify.authenticated", "true");
 
-  return {
-    uid: credential.user.uid,
-    email: credential.user.email
-  };
+    return {
+      uid: credential.user.uid,
+      email: credential.user.email
+    };
+  } catch (error) {
+    switch (error.code) {
+      case "auth/invalid-credential":
+        throw new Error("Invalid email or password.");
+      
+      case "auth/user-not-found":
+        throw new Error("No account found with this email.");
+      
+      case "auth/wrong-password":
+        throw new Error("Incorrect password.");
+      
+      case "auth/too-many-requests":
+        throw new Error("Too many failed attempts. Try again later.");
+      
+      default:
+        throw new Error(error.message);
+    }
+  }
 }
 
 export async function logoutUser() {
