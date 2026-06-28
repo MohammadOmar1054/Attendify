@@ -55,9 +55,12 @@ onReady(() => {
       await loginUser(email, password);
       window.location.href = "dashboard.html";
     } catch (error) {
-      showToast(error.message);
-      button.disabled = false;
-      button.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i>Login';
-    }
+  // alert(error.message);
+
+  showToast(error.message);
+
+  button.disabled = false;
+  button.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i>Login';
+}
   });
 });

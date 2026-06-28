@@ -79,23 +79,15 @@ export async function loginUser(email, password) {
       uid: credential.user.uid,
       email: credential.user.email
     };
+
   } catch (error) {
-    switch (error.code) {
-      case "auth/invalid-credential":
-        throw new Error("Invalid email or password.");
-      
-      case "auth/user-not-found":
-        throw new Error("No account found with this email.");
-      
-      case "auth/wrong-password":
-        throw new Error("Incorrect password.");
-      
-      case "auth/too-many-requests":
-        throw new Error("Too many failed attempts. Try again later.");
-      
-      default:
-        throw new Error(error.message);
+    console.error(error);
+
+    if (error.code === "auth/invalid-credential") {
+      throw new Error("Invalid email or password.");
     }
+
+    throw new Error("Login failed. Please try again.");
   }
 }
 
