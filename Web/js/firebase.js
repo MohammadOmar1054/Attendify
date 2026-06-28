@@ -1,7 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-
+import {
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 const delay = (value, timeout = 120) => new Promise((resolve) => {
   window.setTimeout(() => resolve(structuredClone(value)), timeout);
@@ -98,7 +101,22 @@ export async function logoutUser() {
 }
 
 export async function loadClasses() {
-  return delay(mockClasses);
+  const snapshot = await getDocs(collection(db, "classes"));
+
+  return snapshot.docs.map(doc => {
+    const data = doc.data();
+
+    return {
+      id: doc.id,
+      code: data.courseCode || "",
+      name: data.courseName || "",
+      semester: data.semester || 0,
+      department: data.department || "",
+      lecturer: "Assigned Lecturer",
+      students: 0,
+      attendanceRate: 0
+    };
+  });
 }
 
 export async function loadStudents() {
