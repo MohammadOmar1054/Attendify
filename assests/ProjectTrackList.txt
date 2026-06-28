@@ -1,0 +1,8 @@
+Firmware              ✅
+Frontend UI           ✅
+Firebase Project      ✅
+Authentication        ✅
+Firestore Collections ✅
+
+Frontend ↔ Firebase   ❌
+ESP32 ↔ Firebase      ❌
