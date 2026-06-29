@@ -12,9 +12,11 @@ Frontend ↔ Firebase   ❌
                         ├─ Taost Notif  ✅
                 ├─ Classes ✅
                      ├─ Relies on Firebase ✅
-                ├─ Students
+                ├─ Students✅
+                     ├─ Connected to firebase ✅
+                      
                 ├─ Attendance 
                 ├─ Live Fingerprint Events 
 
-                
+
 ESP32 ↔ Firebase      ❌

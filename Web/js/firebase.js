@@ -3,7 +3,9 @@ import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstati
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 import {
   collection,
-  getDocs
+  getDocs,
+  doc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 const delay = (value, timeout = 120) => new Promise((resolve) => {
@@ -118,17 +120,65 @@ export async function loadClasses() {
     };
   });
 }
+export async function loadStudentsByClass(classId) {
+  const classRef = doc(db, "classes", classId);
+  const classSnap = await getDoc(classRef);
+
+  if (!classSnap.exists()) {
+    return [];
+  }
+
+  const classData = classSnap.data();
+  const studentIds = classData.students || [];
+
+  const snapshot = await getDocs(collection(db, "students"));
+
+  return snapshot.docs
+    .filter(studentDoc => studentIds.includes(studentDoc.id))
+    .map(studentDoc => {
+      const data = studentDoc.data();
+
+      return {
+        regNo: studentDoc.id,
+        name: data.name || "",
+        fingerprint: data.enrolled || false,
+        attendance: data.attendancePercent || 0
+      };
+    });
+}
 
 export async function loadStudents() {
-  return delay(mockStudents);
-}
+  const snapshot = await getDocs(collection(db, "students"));
 
+  return snapshot.docs.map(doc => {
+    const data = doc.data();
+
+    return {
+      regNo: doc.id,
+      name: data.name || "",
+      fingerprint: data.enrolled || false,
+      attendance: 0
+    };
+  });
+}
 export async function loadAttendance() {
-  return delay(mockHistory);
-}
+  const snapshot = await getDocs(collection(db, "attendance"));
 
+  return snapshot.docs.map(doc => {
+    const data = doc.data();
+
+    return {
+      classId: data.classId || "",
+      student: data.studentName || "",
+      regNo: data.studentId || "",
+      date: data.date || "",
+      time: data.time || "",
+      status: data.status || "Present"
+    };
+  });
+}
 export async function loadHistory() {
-  return delay(mockHistory);
+  return loadAttendance();
 }
 
 export async function startAttendance() {

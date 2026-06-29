@@ -1,4 +1,8 @@
-import { loadClasses, loadStudents, loadAttendance } from "./firebase.js";
+import {
+  loadClasses,
+  loadStudentsByClass,
+  loadAttendance
+} from "./firebase.js";
 import { $, badge, createStatCard, onReady, paginate, renderPagination } from "./utils.js";
 
 let students = [];
@@ -40,19 +44,15 @@ function renderClassStats(studentsList, attendance) {
   ].join("");
 }
 
-onReady(async () => {
-  const params = new URLSearchParams(window.location.search);
-  const [classes, studentData, attendance] = await Promise.all([loadClasses(), loadStudents(), loadAttendance()]);
-  const course = classes.find((item) => item.id === params.get("class")) || classes[0];
-  students = studentData;
+const params = new URLSearchParams(window.location.search);
 
-  $("#courseTitle").textContent = course.name;
-  $("#courseMeta").textContent = `Semester ${course.semester} | ${course.department} Department`;
-  renderClassStats(students, attendance);
-  renderStudents();
+const [classes, attendance] = await Promise.all([
+  loadClasses(),
+  loadAttendance()
+]);
 
-  $("#studentSearch")?.addEventListener("input", () => {
-    page = 1;
-    renderStudents();
-  });
-});
+const course =
+  classes.find(item => item.id === params.get("class")) ||
+  classes[0];
+
+students = await loadStudentsByClass(course.id);

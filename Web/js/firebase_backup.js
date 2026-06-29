@@ -1,3 +1,5 @@
+// This version of firebase.js has dependancies on mock values
+
 const delay = (value, timeout = 120) => new Promise((resolve) => {
   window.setTimeout(() => resolve(structuredClone(value)), timeout);
 });
