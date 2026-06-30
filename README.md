@@ -260,10 +260,8 @@ This project demonstrates:
 
 Attendify Project Team
 
-* Project Lead — Mohammad Omar
-* Frontend Development — Kushal
-* Frontend Development — Hanok Anson
-* Firmware & Hardware Integration — Team Attendify
+* Project Lead & Sole Contributor — Mohammad Omar
+*               — Team Attendify
 
 ⸻
 
