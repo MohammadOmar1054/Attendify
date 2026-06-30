@@ -21,4 +21,4 @@ int findFirstFreeID();
 
 int enrollFingerprint(int targetID);
 
-#endif 
+#endif

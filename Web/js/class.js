@@ -15,8 +15,12 @@ function filteredStudents() {
 }
 
 function renderStudents() {
+  console.log("students =", students);
   const rows = filteredStudents();
+  console.log("rows =", rows);
   const pagination = paginate(rows, page, perPage);
+  console.log("pagination =", pagination);
+
   $("#studentCount").textContent = `${rows.length} students`;
   $("#studentTable").innerHTML = pagination.data.map((student) => `
     <tr>
@@ -56,3 +60,6 @@ const course =
   classes[0];
 
 students = await loadStudentsByClass(course.id);
+console.log("LOADED STUDENTS:", students);
+renderStudents();
+console.log(document.getElementById("studentTable").innerHTML);

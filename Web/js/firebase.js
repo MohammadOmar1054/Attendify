@@ -5,8 +5,12 @@ import {
   collection,
   getDocs,
   doc,
-  getDoc
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
 
 const delay = (value, timeout = 120) => new Promise((resolve) => {
   window.setTimeout(() => resolve(structuredClone(value)), timeout);
@@ -121,17 +125,27 @@ export async function loadClasses() {
   });
 }
 export async function loadStudentsByClass(classId) {
+  console.log("CLASS ID RECEIVED:", classId);
+
   const classRef = doc(db, "classes", classId);
   const classSnap = await getDoc(classRef);
 
   if (!classSnap.exists()) {
+    console.log("CLASS DOCUMENT NOT FOUND");
     return [];
   }
 
   const classData = classSnap.data();
   const studentIds = classData.students || [];
 
+  console.log("STUDENT IDS:", studentIds);
+
   const snapshot = await getDocs(collection(db, "students"));
+
+  console.log(
+    "STUDENT DOC IDS:",
+    snapshot.docs.map(doc => doc.id)
+  );
 
   return snapshot.docs
     .filter(studentDoc => studentIds.includes(studentDoc.id))
@@ -145,6 +159,29 @@ export async function loadStudentsByClass(classId) {
         attendance: data.attendancePercent || 0
       };
     });
+}
+
+export async function enrollStudent(studentData) {
+
+  await setDoc(
+    doc(db, "students", studentData.registrationNumber),
+    {
+      name: studentData.studentName,
+      department: studentData.department,
+      semester: Number(studentData.semester),
+      enrolled: true,
+      fingerId: Date.now()
+    }
+  );
+
+  await updateDoc(
+    doc(db, "classes", "iot2026"),
+    {
+      students: arrayUnion(studentData.registrationNumber)
+    }
+  );
+
+  return true;
 }
 
 export async function loadStudents() {

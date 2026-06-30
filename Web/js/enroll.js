@@ -1,4 +1,7 @@
-import { startEnrollment } from "./firebase.js";
+import {
+  startEnrollment,
+  enrollStudent
+} from "./firebase.js";
 import { $, onReady, showToast } from "./utils.js";
 
 const steps = [
@@ -23,6 +26,7 @@ function renderSteps() {
 
 async function runEnrollment(form) {
   const data = Object.fromEntries(new FormData(form).entries());
+  await enrollStudent(data);
   await startEnrollment(data);
   currentStep = 0;
   renderSteps();

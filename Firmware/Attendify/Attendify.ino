@@ -1,6 +1,7 @@
 #include "fingerprint_helper.h"
 #include "display_helper.h"
 #include "buzzer_helper.h"
+#include "firebase_helper.h"
 
 bool resetArmed = false;
 
@@ -11,6 +12,7 @@ void showReady()
 
 void setup()
 {
+    initFirebase();
     Serial.begin(115200);
 
     initDisplay();
@@ -75,6 +77,7 @@ void handleAttendance()
     }
 
     int id = finger.fingerID;
+    sendAttendance(id);
 
     Serial.print("Recognized ID: ");
     Serial.println(id);
@@ -165,6 +168,8 @@ if (finger.fingerFastSearch() == FINGERPRINT_OK)
 
     if (enrolledID > 0)
     {
+        sendEnrollment(enrolledID);
+
         Serial.print("Enrollment Success. ID = ");
         Serial.println(enrolledID);
 
@@ -252,6 +257,20 @@ void handleDelete(String cmd)
 
 void loop()
 {
+    String firebaseCommand = getCommand();
+
+if (firebaseCommand == "ENROLL")
+{
+    clearCommand();
+    handleEnrollment();
+}
+
+if (firebaseCommand == "ATTENDANCE")
+{
+    clearCommand();
+    handleAttendance();
+}
+
     if (!Serial.available())
         return;
 
