@@ -5,7 +5,7 @@ Authentication        ✅
 Class                 ✅
 Firestore Collections ✅
 
-Frontend ↔ Firebase   ❌
+Frontend ↔ Firebase   ✅
          └── Progress
                 ├── Authentication ✅
                         ├──Error handling ✅
@@ -19,4 +19,4 @@ Frontend ↔ Firebase   ❌
                 ├─ Live Fingerprint Events 
 
 
-ESP32 ↔ Firebase      ❌
+ESP32 ↔ Firebase      ✅
