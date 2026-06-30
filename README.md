@@ -207,8 +207,9 @@ Attendify/
 
 🔥 Firebase collection: 
 
-<details>
-<summary>📂 Students Collection</summary>
+## 🔥 Firebase Collections
+
+### Students
 
 ```json
 {
@@ -219,7 +220,53 @@ Attendify/
 }
 ```
 
-</details>
+### Attendance
+
+```json
+{
+  "studentName": "You :)",
+  "studentId": "1RN23CS001",
+  "classId": "iot2026",
+  "status": "Present",
+  "date": "2026-06-30",
+  "time": "09:15 AM"
+}
+```
+
+### Classes
+
+```json
+{
+  "courseCode": "CS101",
+  "courseName": "Internet of Things",
+  "department": "Computer Science",
+  "semester": 1,
+  "students": [
+    "1RN23CS001",
+    "1RN23CS002"
+  ]
+}
+```
+
+### Realtime Database
+
+```json
+{
+  "command": "ATTENDANCE",
+
+  "lastAttendance": {
+    "fingerprintID": 1,
+    "status": "present",
+    "timestamp": 74764
+  },
+
+  "lastEnrollment": {
+    "fingerprintID": 2,
+    "status": "success",
+    "timestamp": 74891
+  }
+}
+```
 
 ⸻
 
