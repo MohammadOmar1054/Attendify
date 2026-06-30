@@ -12,7 +12,7 @@ void showReady()
 
 void setup()
 {
-    initFirebase();
+
     Serial.begin(115200);
 
     initDisplay();
@@ -28,7 +28,7 @@ void setup()
     }
 
     showReady();
-
+    initFirebase();
     Serial.println();
     Serial.println("===== Attendify v2.0 =====");
     Serial.println("Commands:");

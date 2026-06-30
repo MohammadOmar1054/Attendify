@@ -7,7 +7,7 @@
 #define WIFI_PASSWORD "plsdontask"
 
 #define FIREBASE_HOST "attendify-922e2-default-rtdb.asia-southeast1.firebasedatabase.app"
-#define FIREBASE_AUTH ""
+#define FIREBASE_AUTH "TK2TcTfEQElkHhAINNXZGM9Ne30GoQcoSyGt7Yyr"
 
 FirebaseData fbdo;
 FirebaseConfig config;
@@ -29,9 +29,11 @@ void initFirebase()
     Serial.println("WiFi Connected");
 
     config.database_url =
-        "https://attendify-922e2-default-rtdb.asia-southeast1.firebasedatabase.app/";
+    "https://attendify-922e2-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
-    Firebase.begin(&config, &auth);
+config.signer.tokens.legacy_token = FIREBASE_AUTH;
+
+Firebase.begin(&config, &auth);
 
     Firebase.reconnectWiFi(true);
 
@@ -53,26 +55,49 @@ void clearCommand()
 }
 void sendEnrollment(int fingerprintID)
 {
-    Firebase.setInt(
+    bool ok1 = Firebase.setInt(
         fbdo,
         "/lastEnrollment/fingerprintID",
         fingerprintID);
 
-    Firebase.setString(
+    bool ok2 = Firebase.setString(
         fbdo,
         "/lastEnrollment/status",
         "success");
-}
 
+    Serial.print("Enrollment ID Write = ");
+    Serial.println(ok1);
+
+    Serial.print("Enrollment Status Write = ");
+    Serial.println(ok2);
+
+    if (!ok1)
+        Serial.println(fbdo.errorReason());
+
+    if (!ok2)
+        Serial.println(fbdo.errorReason());
+}
 void sendAttendance(int fingerprintID)
 {
-    Firebase.setInt(
+    bool ok1 = Firebase.setInt(
         fbdo,
         "/lastAttendance/fingerprintID",
         fingerprintID);
 
-    Firebase.setString(
+    bool ok2 = Firebase.setString(
         fbdo,
         "/lastAttendance/status",
         "present");
+
+    Serial.print("Attendance ID Write = ");
+    Serial.println(ok1);
+
+    Serial.print("Attendance Status Write = ");
+    Serial.println(ok2);
+
+    if (!ok1)
+        Serial.println(fbdo.errorReason());
+
+    if (!ok2)
+        Serial.println(fbdo.errorReason());
 }
