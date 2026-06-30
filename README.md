@@ -57,35 +57,44 @@ The system combines fingerprint authentication, cloud synchronization, and a mod
 
 🏗️ System Architecture
 
-+-------------------+
-|  Fingerprint Scan |
-+---------+---------+
-          |
-          v
-+-------------------+
-|   R307 Sensor     |
-+---------+---------+
-          |
-          v
-+-------------------+
-|      ESP32        |
-+---------+---------+
-          |
-          v
-+-------------------+
-| Firebase Realtime |
-|     Database      |
-+---------+---------+
-          |
-          v
-+-------------------+
-|    Firestore      |
-+---------+---------+
-          |
-          v
-+-------------------+
-| Web Dashboard UI  |
-+-------------------+
+## 🚀 Attendify Data Pipeline
+
+```text
+┌─────────────┐
+│ Finger Scan │
+└──────┬──────┘
+       ▼
+┌─────────────┐
+│    R307     │
+└──────┬──────┘
+       ▼
+┌─────────────┐
+│    ESP32    │
+└──────┬──────┘
+       ▼
+┌─────────────┐
+│ Firebase RT │
+└──────┬──────┘
+       ▼
+┌─────────────┐
+│ Firestore   │
+└──────┬──────┘
+       ▼
+┌─────────────┐
+│ Attendify   │
+│ Dashboard   │
+└──────┬──────┘
+       ▼
+┌─────────────┐
+│ Attendance  │
+│ Recorded    │
+└─────────────┘
+```
+
+**Latency:** ~1–2 seconds  
+**Authentication:** Biometric Fingerprint  
+**Cloud Sync:** Real-Time  
+**Storage:** Firebase Firestore + RTDB
 
 ⸻
 
