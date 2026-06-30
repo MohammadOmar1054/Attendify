@@ -1,5 +1,17 @@
-import { listenToAttendance, startAttendance } from "./firebase.js";
-import { $, badge, formatClock, onReady, showToast } from "./utils.js";
+import {
+  sendAttendanceCommand,
+  listenForAttendance,
+  getStudentByFingerId,
+  saveAttendanceRecord
+} from "./firebase.js";
+
+import {
+  $,
+  badge,
+  formatClock,
+  onReady,
+  showToast
+} from "./utils.js";
 
 const steps = [
   "Waiting for fingerprint...",
@@ -23,48 +35,165 @@ function renderSteps() {
 
 function setStatus(index) {
   statusIndex = index;
+
   $("#scanHeadline").textContent = steps[index];
-  $("#scanDescription").textContent = index === 0
-    ? "Place a registered finger on the R307 sensor to mark attendance."
-    : "The ESP32 to Firebase flow is being simulated with mock JSON events.";
+
+  $("#scanDescription").textContent =
+    index === 0
+      ? "Place a registered finger on the R307 sensor to mark attendance."
+      : "Processing attendance...";
+
   renderSteps();
 }
 
 function addAttendanceRow(row) {
+
   count += 1;
+
   const tr = document.createElement("tr");
+
   tr.className = "fade-in";
+
   tr.innerHTML = `
     <td>${row.time || formatClock()}</td>
     <td>${row.student}</td>
     <td>${row.regNo}</td>
     <td>${badge(row.status)}</td>
   `;
+
   $("#attendanceTable").prepend(tr);
-  $("#attendanceCount").textContent = `${count} marked`;
+
+  $("#attendanceCount").textContent =
+    `${count} marked`;
 }
 
 async function simulateScan(row) {
-  await startAttendance();
+
   setStatus(1);
-  window.setTimeout(() => setStatus(2), 650);
+
+  window.setTimeout(
+    () => setStatus(2),
+    650
+  );
+
   window.setTimeout(() => {
-    setStatus(row?.status === "Present" || row?.status === "Late" ? 3 : 4);
-    addAttendanceRow(row || { student: "Aarav Sharma", regNo: "CS21B1001", time: formatClock(), status: "Present" });
+
+    setStatus(3);
+
+    addAttendanceRow(row);
+
   }, 1300);
-  window.setTimeout(() => setStatus(0), 2600);
+
+  window.setTimeout(
+    () => setStatus(0),
+    2600
+  );
 }
 
 onReady(() => {
-  renderSteps();
-  setInterval(() => {
-    $("#liveClock").textContent = formatClock();
-  }, 1000);
-  $("#liveClock").textContent = formatClock();
 
-  $("#simulateScan")?.addEventListener("click", () => simulateScan());
-  listenToAttendance((row) => {
-    showToast(`Fingerprint matched: ${row.student}`);
+  renderSteps();
+
+  setInterval(() => {
+
+    $("#liveClock").textContent =
+      formatClock();
+
+  }, 1000);
+
+  $("#liveClock").textContent =
+    formatClock();
+
+  $("#simulateScan")
+    ?.addEventListener(
+      "click",
+      async () => {
+
+        await sendAttendanceCommand();
+
+        showToast(
+          "Waiting for fingerprint..."
+        );
+      }
+    );
+
+  let initialized = false;
+
+  let lastAttendanceTimestamp = null;
+
+  listenForAttendance(async (data) => {
+
+    if (!data)
+      return;
+
+    if (!data.timestamp)
+      return;
+
+    /*
+      Ignore the old attendance record
+      already present in Firebase when
+      page loads.
+    */
+    if (!initialized) {
+
+      initialized = true;
+
+      lastAttendanceTimestamp =
+        data.timestamp;
+
+      console.log(
+        "Old attendance snapshot ignored"
+      );
+
+      return;
+    }
+
+    if (
+      lastAttendanceTimestamp !== null &&
+      data.timestamp <= lastAttendanceTimestamp
+    ) {
+      return;
+    }
+
+    lastAttendanceTimestamp =
+      data.timestamp;
+
+    const student =
+      await getStudentByFingerId(
+        data.fingerprintID
+      );
+
+    const row = {
+
+      student:
+        student?.name ||
+        `Fingerprint ${data.fingerprintID}`,
+
+      regNo:
+        student?.regNo ||
+        `FP-${data.fingerprintID}`,
+
+      status: "Present",
+
+      time: formatClock()
+    };
+
+    showToast(
+      `Fingerprint matched: ${row.student}`
+    );
+
     simulateScan(row);
+
+    try {
+
+      await saveAttendanceRecord(row);
+
+    } catch (error) {
+
+      console.error(
+        "Attendance save failed:",
+        error
+      );
+    }
   });
 });

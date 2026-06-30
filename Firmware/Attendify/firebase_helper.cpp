@@ -65,16 +65,27 @@ void sendEnrollment(int fingerprintID)
         "/lastEnrollment/status",
         "success");
 
+    bool ok3 = Firebase.setInt(
+        fbdo,
+        "/lastEnrollment/timestamp",
+        millis());
+
     Serial.print("Enrollment ID Write = ");
     Serial.println(ok1);
 
     Serial.print("Enrollment Status Write = ");
     Serial.println(ok2);
 
+    Serial.print("Enrollment Timestamp Write = ");
+    Serial.println(ok3);
+
     if (!ok1)
         Serial.println(fbdo.errorReason());
 
     if (!ok2)
+        Serial.println(fbdo.errorReason());
+
+    if (!ok3)
         Serial.println(fbdo.errorReason());
 }
 void sendAttendance(int fingerprintID)
@@ -89,15 +100,26 @@ void sendAttendance(int fingerprintID)
         "/lastAttendance/status",
         "present");
 
+    bool ok3 = Firebase.setInt(
+        fbdo,
+        "/lastAttendance/timestamp",
+        millis());
+
     Serial.print("Attendance ID Write = ");
     Serial.println(ok1);
 
     Serial.print("Attendance Status Write = ");
     Serial.println(ok2);
 
+    Serial.print("Attendance Timestamp Write = ");
+    Serial.println(ok3);
+
     if (!ok1)
         Serial.println(fbdo.errorReason());
 
     if (!ok2)
+        Serial.println(fbdo.errorReason());
+
+    if (!ok3)
         Serial.println(fbdo.errorReason());
 }

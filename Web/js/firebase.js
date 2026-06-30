@@ -2,6 +2,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/fireba
 import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 import {
+  getDatabase,
+  ref,
+  set,
+  get,
+  onValue
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+import {
   collection,
   getDocs,
   doc,
@@ -10,7 +17,9 @@ import {
   updateDoc,
   arrayUnion
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-
+import {
+  addDoc
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 const delay = (value, timeout = 120) => new Promise((resolve) => {
   window.setTimeout(() => resolve(structuredClone(value)), timeout);
@@ -22,9 +31,12 @@ export const firebaseConfig = {
   projectId: "attendify-922e2",
   storageBucket: "attendify-922e2.firebasestorage.app",
   messagingSenderId: "189746001524",
-  appId: "1:189746001524:web:ec436d7843cf4e5f68c321"
+  appId: "1:189746001524:web:ec436d7843cf4e5f68c321",
+  databaseURL:
+    "https://attendify-922e2-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 const app = initializeApp(firebaseConfig);
+export const rtdb = getDatabase(app);
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
@@ -170,7 +182,7 @@ export async function enrollStudent(studentData) {
       department: studentData.department,
       semester: Number(studentData.semester),
       enrolled: true,
-      fingerId: Date.now()
+      fingerId: studentData.fingerId
     }
   );
 
@@ -244,3 +256,95 @@ export function initializeFirebaseApp() {
     config: firebaseConfig
   };
 }
+export async function sendEnrollCommand() {
+  await set(ref(rtdb, "command"), "ENROLL");
+}
+
+export async function sendAttendanceCommand() {
+  await set(ref(rtdb, "command"), "ATTENDANCE");
+}
+
+
+export function listenForAttendance(callback) {
+
+  onValue(
+    ref(rtdb, "lastAttendance"),
+    (snapshot) => {
+
+      const data = snapshot.val();
+
+      if (!data)
+        return;
+
+      if (!data.fingerprintID)
+        return;
+
+      if (!data.status)
+        return;
+
+      if (!data.timestamp)
+        return;
+
+      callback(data);
+    }
+  );
+}
+
+
+export async function getStudentByFingerId(fingerId) {
+
+  const snapshot =
+    await getDocs(collection(db, "students"));
+
+  for (const student of snapshot.docs) {
+
+    const data = student.data();
+
+    if (Number(data.fingerId) === Number(fingerId)) {
+
+      return {
+        regNo: student.id,
+        ...data
+      };
+    }
+  }
+
+  return null;
+}
+
+export async function saveAttendanceRecord(student) {
+
+  const now = new Date();
+
+  await addDoc(
+    collection(db, "attendance"),
+    {
+      studentId: student.regNo,
+      studentName: student.student,
+      classId: "iot2026",
+      date: now.toISOString().split("T")[0],
+      time: now.toLocaleTimeString(),
+      status: "Present"
+    }
+  );
+}
+export function listenForEnrollment(callback) {
+
+  onValue(
+    ref(rtdb, "lastEnrollment"),
+    (snapshot) => {
+
+      const data = snapshot.val();
+
+      if (
+        data &&
+        data.status === "success" &&
+        data.fingerprintID &&
+        data.timestamp
+      ) {
+        callback(data);
+      }
+    }
+  );
+}
+
