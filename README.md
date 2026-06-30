@@ -210,7 +210,7 @@ Attendify/
 Students
 
 {
-  "name": "Hamid",
+  "name": "You :)",
   "department": "Computer Science",
   "semester": 1,
   "fingerId": 1
@@ -219,7 +219,7 @@ Students
 Attendance
 
 {
-  "studentName": "Hamid",
+  "studentName": "You :)",
   "studentId": "1RN23CS001",
   "status": "Present",
   "date": "2026-06-30",
