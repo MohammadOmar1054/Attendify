@@ -298,12 +298,27 @@ This project demonstrates:
 
 ⸻
 
-👨‍💻 Development Team
+<div align="center">
 
-Attendify Project Team
+# 👑 Mohammad Omar
 
-* Project Lead & Sole Contributor — Mohammad Omar
-*               — Team Attendify
+### Creator of Attendify
+
+*Biometric Attendance Management System*
+
+🏗️ System Architecture  
+⚡ ESP32 Firmware Development  
+🔐 Biometric Authentication  
+☁️ Firebase Cloud Integration  
+🎨 Frontend Development  
+
+---
+
+### "Built from sensor to cloud."
+
+</div>
+
+*                  Attendify
 
 ⸻
 
