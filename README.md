@@ -205,26 +205,21 @@ Attendify/
 
 ⸻
 
-🔥 Firebase Collections
+🔥 Firebase collection: 
 
-Students
+<details>
+<summary>📂 Students Collection</summary>
 
+```json
 {
   "name": "You :)",
   "department": "Computer Science",
   "semester": 1,
   "fingerId": 1
 }
+```
 
-Attendance
-
-{
-  "studentName": "You :)",
-  "studentId": "1RN23CS001",
-  "status": "Present",
-  "date": "2026-06-30",
-  "time": "09:15 AM"
-}
+</details>
 
 ⸻
 
