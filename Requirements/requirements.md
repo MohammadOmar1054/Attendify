@@ -1,3 +1,10 @@
+<p align="center">
+<img src="https://img.shields.io/badge/ESP32-IoT-blue?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Firebase-Cloud-orange?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/R307-Fingerprint-green?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Status-Completed-success?style=for-the-badge"/>
+</p>
+
 📋 Attendify - Project Requirements Document
 
 <p align="center">
