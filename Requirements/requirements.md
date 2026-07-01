@@ -7,6 +7,282 @@
 
 📋 Attendify - Project Requirements Document
 
+
+# ⚙ Installation & Setup
+
+## 📋 Prerequisites
+
+Before running Attendify, install the following software and tools.
+
+---
+
+# 💻 Software Requirements
+
+| Software | Version |
+|-----------|----------|
+| Arduino IDE | 2.x or later |
+| Node.js | v20+ |
+| Git | Latest |
+| Visual Studio Code | Latest |
+| Google Chrome | Latest |
+
+---
+
+# 📦 ESP32 Dependencies
+
+Open Arduino IDE → Library Manager and install:
+
+### Required Libraries
+
+```text
+Adafruit Fingerprint Sensor Library
+Firebase ESP Client
+WiFi
+SPI
+Wire
+```
+
+---
+
+### ESP32 Board Package
+
+Open:
+
+```text
+Arduino IDE
+→ Preferences
+→ Additional Board URLs
+```
+
+Add:
+
+```text
+https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+```
+
+Then:
+
+```text
+Tools
+→ Board Manager
+→ ESP32 by Espressif Systems
+```
+
+Install latest version.
+
+---
+
+# 🌐 Frontend Dependencies
+
+Install Node.js first:
+
+```bash
+node -v
+npm -v
+```
+
+Then install Firebase:
+
+```bash
+npm install firebase
+```
+
+Optional development packages:
+
+```bash
+npm install
+```
+
+---
+
+# ☁ Firebase Setup
+
+Create a Firebase Project.
+
+Enable:
+
+```text
+Firebase Authentication
+Cloud Firestore
+Realtime Database
+```
+
+---
+
+## Firestore Collections
+
+### students
+
+```json
+{
+  "studentName": "Haroon",
+  "studentId": "CS21B1042",
+  "department": "Computer Science",
+  "semester": "1",
+  "fingerId": 1
+}
+```
+
+### attendance
+
+```json
+{
+  "studentName": "Haroon",
+  "studentId": "CS21B1042",
+  "status": "Present",
+  "date": "2026-06-30",
+  "time": "11:46:07 PM"
+}
+```
+
+---
+
+## Realtime Database Structure
+
+### command
+
+```json
+{
+  "action": "ENROLL"
+}
+```
+
+### lastEnrollment
+
+```json
+{
+  "fingerprintID": 1,
+  "status": "success"
+}
+```
+
+### lastAttendance
+
+```json
+{
+  "fingerprintID": 1,
+  "status": "present"
+}
+```
+
+---
+
+# 🔑 Firebase Configuration
+
+Replace values inside `firebase.js`
+
+```javascript
+export const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "XXXXXX",
+  appId: "XXXXXX",
+  databaseURL:
+    "https://YOUR_PROJECT-default-rtdb.asia-southeast1.firebasedatabase.app"
+};
+```
+
+---
+
+# 🚀 Running Attendify
+
+## 1. Upload ESP32 Firmware
+
+Connect ESP32.
+
+Open Arduino IDE.
+
+Select:
+
+```text
+Board → ESP32 Dev Module
+Port → COMx
+```
+
+Upload firmware.
+
+---
+
+## 2. Launch Frontend
+
+```bash
+npm install
+```
+
+```bash
+npm start
+```
+
+or simply open:
+
+```text
+index.html
+```
+
+depending on deployment method.
+
+---
+
+# 🏗 System Architecture
+
+```text
+Student Finger
+       ↓
+R307 Fingerprint Sensor
+       ↓
+ESP32
+       ↓
+Firebase Realtime Database
+       ↓
+Firestore
+       ↓
+Attendify Dashboard
+       ↓
+Attendance History
+```
+
+---
+
+# 📡 Features
+
+✅ Fingerprint Enrollment
+
+✅ Fingerprint Authentication
+
+✅ Attendance Tracking
+
+✅ Attendance History
+
+✅ Firebase Synchronization
+
+✅ Real-Time Dashboard
+
+✅ Student Management
+
+---
+
+# 🔮 Future Improvements
+
+- Face Recognition
+- RFID Integration
+- QR Attendance
+- Mobile Application
+- Attendance Analytics
+- Email Notifications
+- Multi-Class Support
+
+---
+
+# 👨‍💻 Developed By
+
+## Mohammad Omar
+
+Project Lead • IoT Developer • Software Engineer
+
+REVA University
+
 <p align="center">
 <img src="https://capsule-render.vercel.app/api?type=waving&height=180&color=0:0F172A,100:06B6D4&text=ATTENDIFY&fontSize=45&fontColor=ffffff"/>
 </p>
