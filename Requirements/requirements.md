@@ -1,4 +1,16 @@
 <p align="center">
+<img src="https://capsule-render.vercel.app/api?type=waving&height=180&color=0:0F172A,100:06B6D4&text=ATTENDIFY&fontSize=45&fontColor=ffffff"/>
+</p>
+<h3 align="center">
+Smart Biometric Attendance System
+</h3>
+<p align="center">
+ESP32 • R307 Fingerprint Sensor • Firebase • Web Dashboard
+</p>
+
+
+
+<p align="center">
 <img src="https://img.shields.io/badge/ESP32-IoT-blue?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/Firebase-Cloud-orange?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/R307-Fingerprint-green?style=for-the-badge"/>
@@ -283,15 +295,7 @@ Project Lead • IoT Developer • Software Engineer
 
 REVA University
 
-<p align="center">
-<img src="https://capsule-render.vercel.app/api?type=waving&height=180&color=0:0F172A,100:06B6D4&text=ATTENDIFY&fontSize=45&fontColor=ffffff"/>
-</p>
-<h3 align="center">
-Smart Biometric Attendance System
-</h3>
-<p align="center">
-ESP32 • R307 Fingerprint Sensor • Firebase • Web Dashboard
-</p>
+
 
 ⸻
 
