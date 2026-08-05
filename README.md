@@ -191,7 +191,8 @@ Dashboard Update
 
 📂 Project Structure
 
-``` Attendify/
+```
+ Attendify/
 │
 ├── firmware/
 │   ├── esp32_code.ino
