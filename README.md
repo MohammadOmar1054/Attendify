@@ -1,5 +1,5 @@
 # Attendify
-🚀 Attendify
+ Attendify
 
 Smart Biometric Attendance Management System
 
@@ -15,7 +15,7 @@ Smart Biometric Attendance Management System
 
 ⸻
 
-✨ Overview
+ Overview
 
 Attendify is a complete IoT-based biometric attendance management platform designed to eliminate manual attendance processes and provide secure, real-time attendance tracking.
 
@@ -23,30 +23,30 @@ The system combines fingerprint authentication, cloud synchronization, and a mod
 
 ⸻
 
-🎯 Key Features
+ Key Features
 
-🔐 Biometric Authentication
+Biometric Authentication
 
 * Fingerprint-based student verification
 * Secure attendance marking
 * Fast identification using R307 sensor
 * Duplicate fingerprint detection
 
-☁️ Real-Time Cloud Integration
+ Real-Time Cloud Integration
 
 * Instant synchronization with Firebase
 * Live attendance updates
 * Cloud-hosted attendance records
 * Centralized data management
 
-📊 Smart Dashboard
+ Smart Dashboard
 
 * Modern responsive UI
 * Real-time attendance monitoring
 * Student enrollment management
 * Attendance history tracking
 
-📝 Attendance Management
+ Attendance Management
 
 * Automatic attendance recording
 * Attendance history logs
@@ -55,9 +55,9 @@ The system combines fingerprint authentication, cloud synchronization, and a mod
 
 ⸻
 
-🏗️ System Architecture
+ System Architecture
 
-## 🚀 Attendify Data Pipeline
+##  Attendify Data Pipeline
 
 ```text
 ┌─────────────┐
@@ -98,7 +98,7 @@ The system combines fingerprint authentication, cloud synchronization, and a mod
 
 ⸻
 
-🛠️ Technology Stack
+ Technology Stack
 
 Hardware
 
@@ -130,9 +130,9 @@ Frontend
 
 ⸻
 
-📸 Modules
+ Modules
 
-👤 Student Enrollment
+ Student Enrollment
 
 * Enter student details
 * Scan fingerprint
@@ -141,7 +141,7 @@ Frontend
 
 ⸻
 
-📍 Attendance Marking
+ Attendance Marking
 
 * Student scans fingerprint
 * ESP32 verifies fingerprint
@@ -150,7 +150,7 @@ Frontend
 
 ⸻
 
-📚 Attendance History
+ Attendance History
 
 * View attendance records
 * Search attendance logs
@@ -159,7 +159,7 @@ Frontend
 
 ⸻
 
-🔄 Workflow
+ Workflow
 
 Enrollment Process
 
@@ -189,7 +189,7 @@ Dashboard Update
 
 ⸻
 
-📂 Project Structure
+Project Structure
 
 ```
  Attendify/
@@ -215,9 +215,9 @@ Dashboard Update
 ```
 ⸻
 
-🔥 Firebase collection: 
+ Firebase collection: 
 
-## 🔥 Firebase Collections
+##  Firebase Collections
 
 ### Students
 
@@ -295,7 +295,7 @@ This project demonstrates:
 
 ⸻
 
-🚀 Future Enhancements
+ Future Enhancements
 
 * Face Recognition Integration
 * RFID Support
@@ -310,25 +310,10 @@ This project demonstrates:
 
 <div align="center">
 
-# 👑 Mohammad Omar
 
-### Creator of Attendify
-
-*Biometric Attendance Management System*
-
-🏗️ System Architecture  
-⚡ ESP32 Firmware Development  
-🔐 Biometric Authentication  
-☁️ Firebase Cloud Integration  
-🎨 Frontend Development  
-
----
-
-### "Built from sensor to cloud."
 
 </div>
 
-*                  Attendify
 
 ⸻
 
